@@ -10,7 +10,7 @@ async function createSong(req, res) {
       image: image,
       url: url,
     });
-    res.status(201).json({msg:"Song table created"});
+    res.status(201).json({msg:"Successfully created song"});
 } catch(error){
   res.status(400).json({ msg: "Error to create song" });
 }

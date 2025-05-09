@@ -10,9 +10,9 @@ router.get("/songs", getSongs);
 router.get("/song/:id", getSongById);
 
 // UPDATE
-router.put("/edit/:id", updateSong);
+router.put("/edit-song/:id", updateSong);
 
 // DELETE
-router.get("/delete/:id", deleteSong);
+router.delete("/delete-song/:id", deleteSong);
 
 export default router;
