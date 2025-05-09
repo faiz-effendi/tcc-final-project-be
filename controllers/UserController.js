@@ -1,5 +1,4 @@
 import User from "../models/UserModel.js";
-import Songs from "../models/SongModel.jsx";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
