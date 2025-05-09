@@ -41,6 +41,13 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
   try{
     const { email, password} = req.body;
+    console.log("Request body:", req.body);
+    console.log("Request params:", req.params);
+
+    console.log("email:", email);
+    console.log("password:", password);
+
+    // Cek apakah email sudah ada
     let updatedData = {
       email
     }; //nyimpen jadi object
@@ -106,7 +113,7 @@ async function loginHandler(req, res){
           const decryptPassword = await bcrypt.compare(password, user.password);
           if(decryptPassword){
               const accessToken = jwt.sign(safeUserData, process.env.ACCESS_TOKEN_SECRET, {
-                  expiresIn : '30s' 
+                  expiresIn : '300s' 
               });
               const refreshToken = jwt.sign(safeUserData, process.env.REFRESH_TOKEN_SECRET, {
                   expiresIn : '1d' 
