@@ -92,17 +92,19 @@ async function loginHandler(req, res){
       const{email, password} = req.body;
       const user = await User.findOne({
           where : {
-              email: email
-          }
-      });
-
+              email: email,
+            }
+          });
+        console.log("email :",user);
+        console.log("password :",password);
+   
+          
       if(user){
         //Data User itu nanti bakalan dipake buat ngesign token kan
         // data user dari sequelize itu harus diubah dulu ke bentuk object
         //Safeuserdata dipake biar lebih dinamis, jadi dia masukin semua data user kecuali data-data sensitifnya  karena bisa didecode kayak password caranya gini :
         const userPlain = user.toJSON(); // Konversi ke object
         const { password: _, refresh_token: __, ...safeUserData } = userPlain;
-
 
           const decryptPassword = await bcrypt.compare(password, user.password);
           if(decryptPassword){
@@ -121,7 +123,7 @@ async function loginHandler(req, res){
                   httpOnly : false, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
                   sameSite : 'none',  //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
                   maxAge  : 24*60*60*1000,
-                  secure:true //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
+                  secure:false //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
               });
               res.status(200).json({
                   status: "Succes",

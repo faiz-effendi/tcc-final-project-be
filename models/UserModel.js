@@ -1,22 +1,21 @@
-import { Sequelize } from "sequelize";
+import sequelize, { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 
 // Membuat tabel "user"
 
 //PERBARUI MODEL USER DENGAN MENAMBAHKAN PASSWORD DAN REFRESH TOKEN
-const User = db.define(
-  "user", // Nama Tabel
+const Users = db.define(
+  "users", // Nama Tabel
   {
-    name: Sequelize.STRING,
-    email: Sequelize.STRING,
-    gender: Sequelize.STRING,
     password: Sequelize.STRING,
+    email: Sequelize.STRING,
     refresh_token: Sequelize.TEXT
   },{
-    freezeTableName : true
+    freezeTableName : true,
+    timestamps: false // menonaktifkan auto create createdAt dan updatedAt
 }
 );
 
 db.sync().then(() => console.log("Database synced"));
 
-export default User;
+export default Users;
