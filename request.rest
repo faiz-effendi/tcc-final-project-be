@@ -11,9 +11,8 @@ POST http://localhost:5000/register
 Content-Type: application/json
 
 {
-    "email": "tes@tes.com",
-    "password": "12345",
-    "refresh_token": ""
+    "email": "flcia@tes.com",
+    "password": "12345"
 }
 
 ### 
