@@ -7,6 +7,11 @@ import db from "../config/Database.js";
 const Users = db.define(
   "users", // Nama Tabel
   {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true, // Auto increment untuk primary key
+    },
     email: Sequelize.STRING,
     password: Sequelize.STRING,
     refresh_token: Sequelize.TEXT
