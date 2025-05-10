@@ -1,11 +1,15 @@
+import Playlist from "../models/PlaylistModel.js";
+import sequelize from "../config/Database.js";
+import Songs from "../models/SongModel.js";
 import User from "../models/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 // GET
-async function getUsers(req, res) {
+async function getPlaylist(req, res) {
   try {
-    const response = await User.findAll();
+    const response = await Playlist.findAll();
+    console.log(response);
     res.status(200).json(response);
   } catch (error) {
     console.log(error.message);
@@ -13,34 +17,75 @@ async function getUsers(req, res) {
 }
 
 // GET BY ID
-async function getUserById(req, res) {
+async function getPlaylistByUserId(req, res) {
   try {
-    const response = await User.findOne({ where: { id: req.params.id } });
+    const response = await Playlist.findAll({ where: { id_user: req.params.id_user } });
     res.status(200).json(response);
   } catch (error) {
     console.log(error.message);
   }
 }
 
-// REGISTER //baru nambahin pasword dan bcrypt
-async function createUser(req, res) {
-  try{
-    const { email, password } = req.body;
-    const encryptPassword = await bcrypt.hash(password, 5);
-    await User.create({
-        email: email,
-        password: encryptPassword
+async function getPlaylistWithSongs(req, res) {
+  try {
+    const { id_user } = req.params;
+
+    const query = `
+      SELECT p.Playlistname, s.id AS song_id, s.name AS song_name, s.artist, s.duration
+      FROM playlist p
+      JOIN songs s ON p.id_song = s.id
+      WHERE p.id_user = :id_user
+    `;
+
+    const playlists = await sequelize.query(query, {
+      replacements: { id_user: id_user },
+      type: sequelize.QueryTypes.SELECT,
     });
-    res.status(201).json({msg:"Register Berhasil"});
+
+    if (!playlists || playlists.length === 0) {
+      return res.status(404).json({ msg: "Playlist tidak ditemukan untuk user ini" });
+    }
+
+    // Kelompokkan lagu berdasarkan Playlistname
+    const groupedPlaylists = playlists.reduce((acc, playlist) => {
+      const { Playlistname, song_id, song_name, artist, duration } = playlist;
+      if (!acc[Playlistname]) {
+        acc[Playlistname] = {
+          Playlistname,
+          songs: [],
+        };
+      }
+      acc[Playlistname].songs.push({ id: song_id, name: song_name, artist, duration });
+      return acc;
+    }, {});
+
+    // Ubah hasil menjadi array
+    const result = Object.values(groupedPlaylists);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
+  }
+}
+
+// REGISTER //baru nambahin pasword dan bcrypt
+async function createPlaylist(req, res) {
+  try{
+    const { Playlistname } = req.body;
+    await Playlist.create({
+        Playlistname: Playlistname,
+    });
+    res.status(201).json({msg:"playlist Berhasil dibuat"});
 } catch(error){
     console.log(error.message);
 }
 }
 
 //baru nambahin case password
-async function updateUser(req, res) {
+async function updatePlaylist(req, res) {
   try{
-    const { email, password} = req.body;
+    const { email } = req.body;
     let updatedData = {
       email
     }; //nyimpen jadi object
@@ -74,7 +119,7 @@ async function updateUser(req, res) {
   }
 }
 
-async function deleteUser(req, res) {
+async function deletePlaylist(req, res) {
   try {
     await User.destroy({ where: { id: req.params.id } });
     res.status(201).json({ msg: "User Deleted" });
@@ -83,90 +128,5 @@ async function deleteUser(req, res) {
   }
 }
 
-//Nambah fungsi buat login handler
-async function loginHandler(req, res){
-  try{
-      const{email, password} = req.body;
-      const user = await User.findOne({
-          where : {
-              email: email,
-            }
-          });
-        console.log("email :",user);
-        console.log("password :",password);
-   
-          
-      if(user){
-        //Data User itu nanti bakalan dipake buat ngesign token kan
-        // data user dari sequelize itu harus diubah dulu ke bentuk object
-        //Safeuserdata dipake biar lebih dinamis, jadi dia masukin semua data user kecuali data-data sensitifnya  karena bisa didecode kayak password caranya gini :
-        const userPlain = user.toJSON(); // Konversi ke object
-        const { password: _, refresh_token: __, ...safeUserData } = userPlain;
 
-          const decryptPassword = await bcrypt.compare(password, user.password);
-          if(decryptPassword){
-              const accessToken = jwt.sign(safeUserData, process.env.ACCESS_TOKEN_SECRET, {
-                  expiresIn : '30s' 
-              });
-              const refreshToken = jwt.sign(safeUserData, process.env.REFRESH_TOKEN_SECRET, {
-                  expiresIn : '1d' 
-              });
-              await User.update({refresh_token:refreshToken},{
-                  where:{
-                      id:user.id
-                  }
-              });
-              res.cookie('refreshToken', refreshToken,{
-                  httpOnly : false, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
-                  sameSite : 'none',  //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
-                  maxAge  : 24*60*60*1000,
-                  secure:false //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
-              });
-              res.status(200).json({
-                  status: "Succes",
-                  message: "Login Berhasil",
-                  safeUserData,
-                  accessToken 
-              });
-          }
-          else{
-              res.status(400).json({
-                  status: "Failed",
-                  message: "Paassword atau email salah",
-                
-              });
-          }
-      } else{
-          res.status(400).json({
-              status: "Failed",
-              message: "Paassword atau email salah",
-          });
-      }
-  } catch(error){
-      res.status(error.statusCode || 500).json({
-          status: "error",
-          message: error.message
-      })
-  }
-}
-
-//nambah logout
-async function logout(req,res){
-  const refreshToken = req.cookies.refreshToken; //mgecek refresh token sama gak sama di database
-  if(!refreshToken) return res.sendStatus(204);
-  const user = await User.findOne({
-      where:{
-          refresh_token:refreshToken
-      }
-  });
-  if(!user.refresh_token) return res.sendStatus(204);
-  const userId = user.id;
-  await User.update({refresh_token:null},{
-      where:{
-          id:userId
-      }
-  });
-  res.clearCookie('refreshToken'); //ngehapus cookies yg tersimpan
-  return res.sendStatus(200);
-}
-export { getUsers, getUserById, createUser, updateUser, deleteUser,loginHandler, logout};
+export { getPlaylist, getPlaylistByUserId, getPlaylistWithSongs, createPlaylist, updatePlaylist, deletePlaylist};

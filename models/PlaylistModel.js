@@ -1,5 +1,7 @@
 import sequelize, { Sequelize } from "sequelize";
 import db from "../config/Database.js";
+import Users from "./UserModel.js";
+import Songs from "./SongModel.js";
 
 // Membuat tabel "playlsit"
 
@@ -35,7 +37,7 @@ const Playlist = db.define(
   },{
     freezeTableName : true,
     timestamps: false // menonaktifkan auto create createdAt dan updatedAt
-}
+  }
 );
 
 db.sync().then(() => console.log("Database synced"));

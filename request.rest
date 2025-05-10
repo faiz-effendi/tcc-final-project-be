@@ -35,6 +35,17 @@ Content-Type: application/json
 ###
 DELETE http://localhost:5000/delete-song/15
 
+
+###
+GET http://localhost:5000/playlist
+
+###
+GET http://localhost:5000/playlist/1
+
+###
+GET http://localhost:5000/playlist-with-songs/2
+
+
 ###
 POST http://localhost:5000/login
 
@@ -48,3 +59,4 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:5000/logout
+
