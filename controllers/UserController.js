@@ -25,14 +25,11 @@ async function getUserById(req, res) {
 // REGISTER //baru nambahin pasword dan bcrypt
 async function createUser(req, res) {
   try{
-    const { name, email, gender, password } = req.body;
+    const { email, password } = req.body;
     const encryptPassword = await bcrypt.hash(password, 5);
     await User.create({
-        name: name,
         email: email,
-        gender: gender,
         password: encryptPassword
-        
     });
     res.status(201).json({msg:"Register Berhasil"});
 } catch(error){
@@ -43,9 +40,16 @@ async function createUser(req, res) {
 //baru nambahin case password
 async function updateUser(req, res) {
   try{
-    const { name, email, gender, password} = req.body;
+    const { email, password} = req.body;
+    console.log("Request body:", req.body);
+    console.log("Request params:", req.params);
+
+    console.log("email:", email);
+    console.log("password:", password);
+
+    // Cek apakah email sudah ada
     let updatedData = {
-      name, email, gender
+      email
     }; //nyimpen jadi object
 
     if (password) {
@@ -109,7 +113,7 @@ async function loginHandler(req, res){
           const decryptPassword = await bcrypt.compare(password, user.password);
           if(decryptPassword){
               const accessToken = jwt.sign(safeUserData, process.env.ACCESS_TOKEN_SECRET, {
-                  expiresIn : '30s' 
+                  expiresIn : '300s' 
               });
               const refreshToken = jwt.sign(safeUserData, process.env.REFRESH_TOKEN_SECRET, {
                   expiresIn : '1d' 

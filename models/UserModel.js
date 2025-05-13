@@ -7,8 +7,8 @@ import db from "../config/Database.js";
 const Users = db.define(
   "users", // Nama Tabel
   {
-    password: Sequelize.STRING,
     email: Sequelize.STRING,
+    password: Sequelize.STRING,
     refresh_token: Sequelize.TEXT
   },{
     freezeTableName : true,
