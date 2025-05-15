@@ -41,6 +41,14 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
   try{
     const { email, password} = req.body;
+
+    console.log("Request body:", req.body);
+    console.log("Request params:", req.params);
+
+    console.log("email:", email);
+    console.log("password:", password);
+
+    // Cek apakah email sudah ada
     let updatedData = {
       email
     }; //nyimpen jadi object

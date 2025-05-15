@@ -6,7 +6,7 @@ import db from "../config/Database.js";
 //PERBARUI MODEL USER DENGAN MENAMBAHKAN PASSWORD DAN REFRESH TOKEN
 const Users = db.define(
   "users", // Nama Tabel
-  {
+  {  
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
