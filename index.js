@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import UserRoute from "./routes/UserRoute.js";
+import SongRoute from "./routes/SongRoute.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
@@ -14,5 +15,6 @@ app.use(cors({ credentials: true, origin: 'http://localhost:5000' }));
 app.use(express.json());
 app.get("/", (req, res) => res.render("index"));
 app.use(UserRoute);
+app.use(SongRoute);
 
 app.listen(5000, () => console.log("Server connected"));

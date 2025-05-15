@@ -1,46 +1,40 @@
-GET http://localhost:5000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJhYnJAZ21haWwuY29tIiwiaWF0IjoxNzQ2NzcyMDYzLCJleHAiOjE3NDY3NzIwOTN9.jkilmyrA9ogU0wPRMNDrpVjb39HAfHTdEn3QKPWQq5U
-###
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmdHJobW5AZ21haWwuY29tIiwiaWF0IjoxNzQ3MTU3OTg1LCJleHAiOjE3NDcxNTgyODV9.DHe4EzzRSoFP7d9YqXctgU1xfaBDxOcuJYeieWSu580
 
 GET http://localhost:5000/users
 
+###
+GET http://localhost:5000/songs
 
 ###
+GET http://localhost:5000/songs/3
 
+
+###
 POST http://localhost:5000/register
 Content-Type: application/json
-
 {
-    "email": "flcia@tes.com",
+    "email": "ftrhmn@gmail.com",
     "password": "12345"
 }
 
 ### 
-PUT http://localhost:5000/edit-user/7
+PUT http://localhost:5000/edit-user/3
+Authorization: Bearer {{token}}
 Content-Type: application/json
-
 {
-    "email": "arf@gmail.com"
-}
-
-###
-
-DELETE http://localhost:5000/delete-user/1
-
-
-###
-
-POST http://localhost:5000/login
-Content-Type: application/json
-
-{
-   
-    "email": "fzz@gmail.com",
+    "email": "fatur@gmail.com",
     "password": "12345"
 }
 
+###
+
+###
+POST http://localhost:5000/login
+
+Content-Type: application/json
+{
+}
+
 
 
 ###
-
-DELETE http://localhost:5000/logout
