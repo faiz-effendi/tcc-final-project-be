@@ -14,6 +14,10 @@ const Playlist = db.define(
       primaryKey: true,
       autoIncrement: true, // Auto increment untuk primary key
     },
+    id_playlist: {
+      type: Sequelize.STRING,
+      allowNull: true, // id_playlist opsional
+    },
     Playlistname: {
       type: Sequelize.STRING,
       allowNull: true, // Playlistname opsional
@@ -28,7 +32,7 @@ const Playlist = db.define(
     },
     id_song: {
       type: Sequelize.INTEGER,
-      allowNull: false, // Foreign key ke tabel songs
+      allowNull: true, // Foreign key ke tabel songs
       references: {
         model: Songs, // Nama model yang dirujuk
         key: "id", // Kolom di tabel songs yang dirujuk
