@@ -71,62 +71,163 @@ async function getPlaylistWithSongs(req, res) {
 
 // REGISTER //baru nambahin pasword dan bcrypt
 async function createPlaylist(req, res) {
-  try{
-    const { Playlistname } = req.body;
-    await Playlist.create({
-        Playlistname: Playlistname,
+  try {
+    const { playlist_name } = req.body;
+    const id_user = req.user.id;
+
+    if (!playlist_name) {
+      return res.status(400).json({ msg: "Playlist name harus diisi" });
+    }
+
+    const existingPlaylist = await Playlist.findOne({
+      where: {
+        Playlistname: playlist_name,
+        id_user: id_user,
+      },
     });
-    res.status(201).json({msg:"playlist Berhasil dibuat"});
-} catch(error){
+
+    if (existingPlaylist) {
+      return res.status(400).json({ msg: "Playlist dengan nama ini sudah ada" });
+    }
+
+    // Buat playlist baru tanpa id_playlist
+    const newPlaylist = await Playlist.create({
+      Playlistname: playlist_name,
+      id_user: id_user,
+    });
+
+    // Gabungkan id utama (primary key) dan playlistname
+    const id_playlist = `${newPlaylist.id_user}_${playlist_name.replace(/\s+/g, '_')}`;
+
+    // Update playlist dengan id_playlist yang baru
+    await newPlaylist.update({ id_playlist });
+
+    res.status(201).json({ msg: "Playlist berhasil dibuat", playlist: newPlaylist });
+  } catch (error) {
     console.log(error.message);
-}
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
+  }
 }
 
 //baru nambahin case password
 async function updatePlaylist(req, res) {
-  try{
-    const { email } = req.body;
-    let updatedData = {
-      email
-    }; //nyimpen jadi object
+  try {
+    const { playlist_name } = req.body;
+    const { id_playlist } = req.params;
 
-    if (password) {
-        const encryptPassword = await bcrypt.hash(password, 5);
-        updatedData.password = encryptPassword;
+    if (!playlist_name) {
+      return res.status(400).json({ msg: "Playlist name harus diisi" });
     }
 
-    const result = await User.update(updatedData, {
-        where: {
-            id: req.params.id
-        }
-    });
-
-    // Periksa apakah ada baris yang terpengaruh (diupdate)
-    if (result[0] === 0) {
-        return res.status(404).json({
-            status: 'failed',
-            message: 'User tidak ditemukan atau tidak ada data yang berubah',
-            updatedData: updatedData,
-            result
-        });
+    // Cari playlist berdasarkan id_playlist
+    const playlist = await Playlist.findOne({ where: { id_playlist } });
+    if (!playlist) {
+      return res.status(404).json({ msg: "Playlist tidak ditemukan" });
     }
 
+    // Update nama playlist
+    playlist.Playlistname = playlist_name;
 
-    
-    res.status(200).json({msg:"User Updated"});
-  } catch(error){
+    // Update id_playlist dengan format baru
+    playlist.id_playlist = `${playlist.id_user}_${playlist_name.replace(/\s+/g, '_')}`;
+
+    await playlist.save();
+
+    res.status(200).json({ msg: "Playlist berhasil diupdate", playlist });
+  } catch (error) {
     console.log(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 }
 
 async function deletePlaylist(req, res) {
   try {
-    await User.destroy({ where: { id: req.params.id } });
-    res.status(201).json({ msg: "User Deleted" });
+    const { id_playlist } = req.params;
+    const deleted = await Playlist.destroy({ where: { id_playlist } });
+
+    if (deleted === 0) {
+      return res.status(404).json({ msg: "Playlist tidak ditemukan" });
+    }
+
+    res.status(200).json({ msg: "Playlist Deleted" });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 }
 
 
-export { getPlaylist, getPlaylistByUserId, getPlaylistWithSongs, createPlaylist, updatePlaylist, deletePlaylist};
+async function addSongToPlaylist(req, res) {
+  try {
+    const { id_playlist, id_song } = req.params;
+
+    // Validasi input
+    if (!id_playlist || !id_song) {
+      return res.status(400).json({ msg: "id_playlist dan id_song harus diisi" });
+    }
+
+    // Cek apakah playlist ada
+    const playlist = await Playlist.findOne({ where: { id_playlist } });
+    if (!playlist) {
+      return res.status(404).json({ msg: "Playlist tidak ditemukan" });
+    }
+
+    // Cek apakah lagu sudah ada di playlist
+    const existingSong = await Playlist.findOne({
+      where: { id_playlist, id_song },
+    });
+    if (existingSong) {
+      return res.status(400).json({ msg: "Lagu sudah ada di playlist ini" });
+    }
+
+    // Tambahkan lagu ke playlist
+    await Playlist.create({
+      id_playlist,
+      id_user: playlist.id_user,
+      Playlistname: playlist.Playlistname,
+      id_song,
+    });
+
+    // Ambil detail lagu dari tabel song
+    const song = await Songs.findByPk(id_song);
+
+    res.status(201).json({
+      msg: "Lagu berhasil ditambahkan ke playlist",
+      song,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
+  }
+}
+
+async function removeSongtoPlaylist(req, res) {
+  try {
+    const { id_playlist, id_song } = req.params;
+
+    // Cek apakah playlist ada
+    const playlist = await Playlist.findOne({ where: { id_playlist } });
+    if (!playlist) {
+      return res.status(404).json({ msg: "Playlist tidak ditemukan" });
+    }
+
+    // Hapus lagu dari playlist (hanya baris yang sesuai)
+    const deleted = await Playlist.destroy({
+      where: {
+        id_playlist,
+        id_song,
+      },
+    });
+
+    if (deleted === 0) {
+      return res.status(404).json({ msg: "Lagu tidak ditemukan di playlist ini" });
+    }
+
+    res.status(200).json({ msg: "Lagu berhasil dihapus dari playlist" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
+  }
+}
+
+export { removeSongtoPlaylist, addSongToPlaylist, getPlaylist, getPlaylistByUserId, getPlaylistWithSongs, createPlaylist, updatePlaylist, deletePlaylist};
