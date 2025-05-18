@@ -25,14 +25,11 @@ async function getUserById(req, res) {
 // REGISTER //baru nambahin pasword dan bcrypt
 async function createUser(req, res) {
   try{
-    const { name, email, gender, password } = req.body;
+    const { email, password } = req.body;
     const encryptPassword = await bcrypt.hash(password, 5);
     await User.create({
-        name: name,
         email: email,
-        gender: gender,
         password: encryptPassword
-        
     });
     res.status(201).json({msg:"Register Berhasil"});
 } catch(error){
@@ -43,9 +40,17 @@ async function createUser(req, res) {
 //baru nambahin case password
 async function updateUser(req, res) {
   try{
-    const { name, email, gender, password} = req.body;
+    const { email, password} = req.body;
+
+    console.log("Request body:", req.body);
+    console.log("Request params:", req.params);
+
+    console.log("email:", email);
+    console.log("password:", password);
+
+    // Cek apakah email sudah ada
     let updatedData = {
-      name, email, gender
+      email
     }; //nyimpen jadi object
 
     if (password) {
@@ -92,10 +97,13 @@ async function loginHandler(req, res){
       const{email, password} = req.body;
       const user = await User.findOne({
           where : {
-              email: email
-          }
-      });
-
+              email: email,
+            }
+          });
+        console.log("email :",user);
+        console.log("password :",password);
+   
+          
       if(user){
         //Data User itu nanti bakalan dipake buat ngesign token kan
         // data user dari sequelize itu harus diubah dulu ke bentuk object
@@ -103,11 +111,10 @@ async function loginHandler(req, res){
         const userPlain = user.toJSON(); // Konversi ke object
         const { password: _, refresh_token: __, ...safeUserData } = userPlain;
 
-
           const decryptPassword = await bcrypt.compare(password, user.password);
           if(decryptPassword){
               const accessToken = jwt.sign(safeUserData, process.env.ACCESS_TOKEN_SECRET, {
-                  expiresIn : '30s' 
+                  expiresIn : '180s' 
               });
               const refreshToken = jwt.sign(safeUserData, process.env.REFRESH_TOKEN_SECRET, {
                   expiresIn : '1d' 
@@ -121,7 +128,7 @@ async function loginHandler(req, res){
                   httpOnly : false, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
                   sameSite : 'none',  //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
                   maxAge  : 24*60*60*1000,
-                  secure:true //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
+                  secure:false //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
               });
               res.status(200).json({
                   status: "Succes",
