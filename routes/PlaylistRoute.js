@@ -10,15 +10,15 @@ router.post("/create-playlist", verifyToken,createPlaylist);
 router.post("/add-song-to-playlist/:id_playlist/:id_song", addSongToPlaylist);
 
 // READ
-router.get("/playlist",getPlaylist);
-router.get("/playlist/:id_user", getPlaylistByUserId);
-router.get("/playlist-with-songs/:id_user", getPlaylistWithSongs);
+router.get("/playlist",verifyToken,getPlaylist);
+router.get("/playlist/:id_user",verifyToken, getPlaylistByUserId);
+router.get("/playlist-with-songs/:id_user", verifyToken,getPlaylistWithSongs);
 
 // UPDATE
-router.put("/edit-playlist/:id_playlist", updatePlaylist);
+router.put("/edit-playlist/:id_playlist", verifyToken,updatePlaylist);
 
 // DELETE
 router.delete("/delete-playlist/:id_playlist",verifyToken,deletePlaylist);
-router.delete("/remove-song-from-playlist/:id_playlist/:id_song", removeSongtoPlaylist);
+router.delete("/remove-song-from-playlist/:id_playlist/:id_song", verifyToken,removeSongtoPlaylist);
 
 export default router;
