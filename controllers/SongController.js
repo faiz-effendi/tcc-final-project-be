@@ -1,4 +1,5 @@
 import Songs from "../models/SongModel.js";
+import { Op } from "sequelize";
 
 async function createSong(req, res) {
   try{
@@ -28,6 +29,19 @@ async function getSongs(req, res) {
 async function getSongById(req, res) {
   try {
     const response = await Songs.findOne({ where: {id: req.params.id} });
+    if(!response) {
+      return res.status(404).json({ msg: "Song not found" });
+    } else {
+      res.status(200).json(response);
+    }
+  } catch (error) {
+    res.status(400).json({ msg: "Error to fetch song by id" });
+  }
+}
+
+async function getSongByName(req, res) {
+  try {
+    const response = await Songs.findAll({ where: {name: { [Op.like]: `%${req.params.name}%` }} });
     if(!response) {
       return res.status(404).json({ msg: "Song not found" });
     } else {
@@ -80,4 +94,4 @@ async function deleteSong(req, res) {
   }
 }
 
-export { createSong, getSongs, getSongById, deleteSong, updateSong };
+export { createSong, getSongs, getSongById, getSongByName, deleteSong, updateSong };
