@@ -177,7 +177,7 @@ async function logout(req, res) {
     res.clearCookie("refreshToken",{
         httpOnly: true,
         sameSite: 'none',
-        secure: true,
+        secure: false,
     }); // Sesuaikan nama cookie
 
     // Response
