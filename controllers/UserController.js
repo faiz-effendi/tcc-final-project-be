@@ -125,7 +125,7 @@ async function loginHandler(req, res){
                   }
               });
               res.cookie('refreshToken', refreshToken,{
-                  httpOnly : false, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
+                  httpOnly : true, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
                   sameSite : 'none',  //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
                   maxAge  : 24*60*60*1000,
                   secure: true //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
@@ -159,22 +159,36 @@ async function loginHandler(req, res){
 }
 
 //nambah logout
-async function logout(req,res){
-  const refreshToken = req.cookies.refreshToken; //mgecek refresh token sama gak sama di database
-  if(!refreshToken) return res.sendStatus(204);
-  const user = await User.findOne({
-      where:{
-          refresh_token:refreshToken
-      }
-  });
-  if(!user.refresh_token) return res.sendStatus(204);
-  const userId = user.id;
-  await User.update({refresh_token:null},{
-      where:{
-          id:userId
-      }
-  });
-  res.clearCookie('refreshToken'); //ngehapus cookies yg tersimpan
-  return res.sendStatus(200);
+async function logout(req, res) {
+   try {
+    const refreshToken = req.cookies.refreshToken; // Sesuaikan nama cookie
+    if (!refreshToken) return res.sendStatus(204); // No Content, berarti user sudah logout
+
+    // User Validation
+    const data = await Users.findOne({
+      where: { refresh_token: refreshToken },
+    });
+    if (!data) return res.status(204).json("User Tidak Ditemukan");
+
+    // Mengupdate refresh token menjadi null
+    await Users.update({ refresh_token: null }, { where: { id: data.id } });
+
+    // Menghapus refresh cookie
+    res.clearCookie("refreshToken",{
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+    }); // Sesuaikan nama cookie
+
+    // Response
+    return res.status(200).json({
+      message: "Logout Berhasil",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Terjadi Kesalahan",
+      error: error.message,
+    });
+  }
 }
 export { getUsers, getUserById, createUser, updateUser, deleteUser,loginHandler, logout};

@@ -5,7 +5,7 @@ import { verifyToken } from "../middleware/VerifyToken.js";
 const router = express.Router();
 
 // CREATE
-router.post("/create-song", createSong);
+router.post("/create-song", verifyToken,createSong);
 
 // READ
 router.get("/songs",verifyToken,getSongs);
