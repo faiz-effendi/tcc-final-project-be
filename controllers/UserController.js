@@ -165,13 +165,13 @@ async function logout(req, res) {
     if (!refreshToken) return res.sendStatus(204); // No Content, berarti user sudah logout
 
     // User Validation
-    const data = await Users.findOne({
+    const data = await User.findOne({
       where: { refresh_token: refreshToken },
     });
     if (!data) return res.status(204).json("User Tidak Ditemukan");
 
     // Mengupdate refresh token menjadi null
-    await Users.update({ refresh_token: null }, { where: { id: data.id } });
+    await User.update({ refresh_token: null }, { where: { id: data.id } });
 
     // Menghapus refresh cookie
     res.clearCookie("refreshToken",{
