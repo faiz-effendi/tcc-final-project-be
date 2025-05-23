@@ -31,7 +31,7 @@ async function getPlaylistWithSongs(req, res) {
     const { id_playlist } = req.params;
 
     const query = `
-      SELECT p.Playlistname, s.id AS song_id, s.name AS song_name, s.artist, s.duration
+      SELECT p.Playlistname, s.*
       FROM playlist p
       JOIN songs s ON p.id_song = s.id
       WHERE p.id_playlist = :id_playlist
@@ -46,16 +46,16 @@ async function getPlaylistWithSongs(req, res) {
       return res.status(404).json({ msg: "Playlist tidak ditemukan atau belum ada lagu" });
     }
 
-    // Kelompokkan lagu berdasarkan Playlistname (meskipun 1 playlist, tetap array)
+    // Kelompokkan lagu berdasarkan Playlistname
     const groupedPlaylists = playlists.reduce((acc, playlist) => {
-      const { Playlistname, song_id, song_name, artist, duration } = playlist;
+      const { Playlistname, ...songInfo } = playlist;
       if (!acc[Playlistname]) {
         acc[Playlistname] = {
           Playlistname,
           songs: [],
         };
       }
-      acc[Playlistname].songs.push({ id: song_id, name: song_name, artist, duration });
+      acc[Playlistname].songs.push(songInfo);
       return acc;
     }, {});
 
