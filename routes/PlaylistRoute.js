@@ -12,7 +12,7 @@ router.post("/add-song-to-playlist/:id_playlist/:id_song", addSongToPlaylist);
 // READ
 router.get("/playlist",verifyToken,getPlaylist);
 router.get("/playlist/:id_user",verifyToken, getPlaylistByUserId);
-router.get("/playlist-with-songs/:id_user", verifyToken,getPlaylistWithSongs);
+router.get("/playlist-with-songs/:id_playlist", verifyToken,getPlaylistWithSongs);
 
 // UPDATE
 router.put("/edit-playlist/:id_playlist", verifyToken,updatePlaylist);

@@ -1,0 +1,115 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJhYnJAZ21haWwuY29tIiwiaWF0IjoxNzQ4MDA4MDEzLCJleHAiOjE3NDgwMDgxOTN9.49wfPwXAdUC9n8LO3Vk2ROj2OseAcHUp8plL-QxZ_jA
+
+###
+GET https://be-713031961242.asia-southeast2.run.app/token
+###
+GET http://localhost:5000/users-auth
+Authorization: Bearer {{token}}
+###
+GET https://be-713031961242.asia-southeast2.run.app/users
+
+###
+POST http://localhost:5000/register
+Content-Type: application/json
+{
+    "email": "flcia@tes.com",
+    "password": "12345"
+}
+
+###
+POST https://be-713031961242.asia-southeast2.run.app/login
+# POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "abr@gmail.com",
+    "password": "testing"
+}
+
+###
+
+DELETE https://be-713031961242.asia-southeast2.run.app/logout
+
+### 
+PUT http://localhost:5000/edit-user/7
+Content-Type: application/json
+{
+    "email": "arf@gmail.com"
+}
+
+###
+
+###
+GET http://localhost:5000/songs
+# Authorization: Bearer {{token}}
+
+
+###
+GET http://localhost:5000/songs/3
+
+###
+PUT http://localhost:5000/edit-song/3
+Content-Type: application/json
+{
+    "artist": "Boldenn"
+}
+
+###
+POST http://localhost:5000/create-song
+Content-Type: application/json
+{
+    "title": "dummy",
+    "artist": "dummy",
+    "album": "dummy",
+    "release_year": 2023,
+    "genre": "Pop"
+}
+
+###
+DELETE /delete-song/15
+
+
+###
+GET https://be-713031961242.asia-southeast2.run.app/playlist/
+Authorization: Bearer {{token}}
+###
+GET https://be-713031961242.asia-southeast2.run.app/playlist-with-songs/3_rock_surabaya
+Authorization: Bearer {{token}}
+###
+
+POST https://be-713031961242.asia-southeast2.run.app/create-playlist
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "playlist_name": "rock upnvy"
+}
+
+###
+POST http://localhost:5000/add-song-to-playlist/3_rock_surabaya/1
+
+###
+
+DELETE http://localhost:5000/remove-song-from-playlist/3_rock_surabaya/1
+
+###
+GET https://be-713031961242.asia-southeast2.run.app/playlist-with-songs/3
+Authorization: Bearer {{token}}
+
+###
+PUT http://localhost:5000/edit-playlist/13_rock_jawa
+authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "playlist_name": "rock jawabarat"
+}
+
+
+###
+
+DELETE https://be-713031961242.asia-southeast2.run.app/delete-playlist/4_rock_upnvy
+Authorization: Bearer {{token}}
+
+
+

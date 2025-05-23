@@ -28,25 +28,25 @@ async function getPlaylistByUserId(req, res) {
 
 async function getPlaylistWithSongs(req, res) {
   try {
-    const { id_user } = req.params;
+    const { id_playlist } = req.params;
 
     const query = `
       SELECT p.Playlistname, s.id AS song_id, s.name AS song_name, s.artist, s.duration
       FROM playlist p
       JOIN songs s ON p.id_song = s.id
-      WHERE p.id_user = :id_user
+      WHERE p.id_playlist = :id_playlist
     `;
 
     const playlists = await sequelize.query(query, {
-      replacements: { id_user: id_user },
+      replacements: { id_playlist },
       type: sequelize.QueryTypes.SELECT,
     });
 
     if (!playlists || playlists.length === 0) {
-      return res.status(404).json({ msg: "Playlist tidak ditemukan untuk user ini" });
+      return res.status(404).json({ msg: "Playlist tidak ditemukan atau belum ada lagu" });
     }
 
-    // Kelompokkan lagu berdasarkan Playlistname
+    // Kelompokkan lagu berdasarkan Playlistname (meskipun 1 playlist, tetap array)
     const groupedPlaylists = playlists.reduce((acc, playlist) => {
       const { Playlistname, song_id, song_name, artist, duration } = playlist;
       if (!acc[Playlistname]) {
@@ -59,7 +59,6 @@ async function getPlaylistWithSongs(req, res) {
       return acc;
     }, {});
 
-    // Ubah hasil menjadi array
     const result = Object.values(groupedPlaylists);
 
     res.status(200).json(result);
