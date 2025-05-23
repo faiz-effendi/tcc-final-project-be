@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJhYnJAZ21haWwuY29tIiwiaWF0IjoxNzQ4MDA4MDEzLCJleHAiOjE3NDgwMDgxOTN9.49wfPwXAdUC9n8LO3Vk2ROj2OseAcHUp8plL-QxZ_jA
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmYXR1ckBnbWFpbC5jb20iLCJpYXQiOjE3NDgwMTI4NDAsImV4cCI6MTc0ODAxMzAyMH0.-_iMGAXzUzMqmtKxXZJEDkWwhhJXmEiohhC7WXsT2os
 
 ###
 GET https://be-713031961242.asia-southeast2.run.app/token
@@ -22,8 +22,8 @@ POST https://be-713031961242.asia-southeast2.run.app/login
 Content-Type: application/json
 
 {
-    "email": "abr@gmail.com",
-    "password": "testing"
+    "email": "fatur@gmail.com",
+    "password": "12345"
 }
 
 ###
