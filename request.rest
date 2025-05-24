@@ -1,5 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmYXR1ckBnbWFpbC5jb20iLCJpYXQiOjE3NDgwMTI4NDAsImV4cCI6MTc0ODAxMzAyMH0.-_iMGAXzUzMqmtKxXZJEDkWwhhJXmEiohhC7WXsT2os
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmYXR1ckBnbWFpbC5jb20iLCJpYXQiOjE3NDgwOTE3MzIsImV4cCI6MTc0ODA5MTkxMn0.qrX7EuZuj7wFNM43j_IsbvuWMI1PXRV7pbqB5cfG06g
 ###
 GET https://be-713031961242.asia-southeast2.run.app/token
 ###
@@ -70,7 +69,7 @@ DELETE /delete-song/15
 
 
 ###
-GET https://be-713031961242.asia-southeast2.run.app/playlist/
+GET https://be-713031961242.asia-southeast2.run.app/playlist/4
 Authorization: Bearer {{token}}
 ###
 GET https://be-713031961242.asia-southeast2.run.app/playlist-with-songs/3_rock_surabaya
@@ -90,8 +89,8 @@ POST http://localhost:5000/add-song-to-playlist/3_rock_surabaya/1
 
 ###
 
-DELETE http://localhost:5000/remove-song-from-playlist/3_rock_surabaya/1
-
+DELETE https://be-713031961242.asia-southeast2.run.app/remove-song-from-playlist/3_rock_surabaya/1
+Authorization: Bearer {{token}}
 ###
 GET https://be-713031961242.asia-southeast2.run.app/playlist-with-songs/3
 Authorization: Bearer {{token}}
