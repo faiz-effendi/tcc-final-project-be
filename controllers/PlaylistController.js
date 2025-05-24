@@ -19,10 +19,38 @@ async function getPlaylist(req, res) {
 // GET BY ID
 async function getPlaylistByUserId(req, res) {
   try {
-    const response = await Playlist.findAll({ where: { id_user: req.params.id_user } });
-    res.status(200).json(response);
+    const id_user = req.params.id_user;
+
+    // Ambil semua playlist untuk user tertentu
+    const playlists = await Playlist.findAll({ where: { id_user } });
+
+    if (!playlists || playlists.length === 0) {
+      return res.status(404).json({ msg: "Playlist tidak ditemukan untuk user ini" });
+    }
+
+    // Kelompokkan playlist berdasarkan Playlistname
+    const groupedPlaylists = playlists.reduce((acc, playlist) => {
+      const { Playlistname, id_playlist, id_user } = playlist;
+      if (!acc[Playlistname]) {
+        acc[Playlistname] = {
+          Playlistname,
+          id_playlist,
+          id_user,
+          songs: [],
+        };
+      }
+      if (playlist.id_song) {
+        acc[Playlistname].songs.push(playlist.id_song);
+      }
+      return acc;
+    }, {});
+
+    const result = Object.values(groupedPlaylists);
+
+    res.status(200).json(result);
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 }
 
