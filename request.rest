@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmYXR1ckBnbWFpbC5jb20iLCJpYXQiOjE3NDgwOTE3MzIsImV4cCI6MTc0ODA5MTkxMn0.qrX7EuZuj7wFNM43j_IsbvuWMI1PXRV7pbqB5cfG06g
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmYXR1ckBnbWFpbC5jb20iLCJpYXQiOjE3NDgxMDMyNTgsImV4cCI6MTc0ODEwMzMxOH0.lyHvIbhl9ediak8pIlfBVO7M7ShYKiTAIawvX386IKM
 ###
 GET https://be-713031961242.asia-southeast2.run.app/token
 ###
@@ -72,7 +72,7 @@ DELETE /delete-song/15
 GET https://be-713031961242.asia-southeast2.run.app/playlist/4
 Authorization: Bearer {{token}}
 ###
-GET https://be-713031961242.asia-southeast2.run.app/playlist-with-songs/3_rock_surabaya
+GET https://be-713031961242.asia-southeast2.run.app/playlist-with-songs/4_rock_eng
 Authorization: Bearer {{token}}
 ###
 
@@ -96,12 +96,12 @@ GET https://be-713031961242.asia-southeast2.run.app/playlist-with-songs/3
 Authorization: Bearer {{token}}
 
 ###
-PUT http://localhost:5000/edit-playlist/13_rock_jawa
+PUT https://be-713031961242.asia-southeast2.run.app/edit-playlist/3_rock_kalimantan
 authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "playlist_name": "rock jawabarat"
+    "playlist_name": "rock sulawesi"
 }
 
 

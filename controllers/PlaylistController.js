@@ -152,11 +152,20 @@ async function updatePlaylist(req, res) {
       return res.status(404).json({ msg: "Playlist tidak ditemukan" });
     }
 
+    // Buat id_playlist yang baru
+    const new_id_playlist = `${playlist.id_user}_${playlist_name.replace(/\s+/g, '_')}`;
+
+    // Cek apakah id_playlist yang baru sudah ada
+    const existingPlaylist = await Playlist.findOne({ where: { id_playlist: new_id_playlist } });
+    if (existingPlaylist && existingPlaylist.id !== playlist.id) {
+      return res.status(400).json({ msg: "Playlist dengan nama ini sudah ada" });
+    }
+
     // Update nama playlist
     playlist.Playlistname = playlist_name;
 
     // Update id_playlist dengan format baru
-    playlist.id_playlist = `${playlist.id_user}_${playlist_name.replace(/\s+/g, '_')}`;
+    playlist.id_playlist = new_id_playlist;
 
     await playlist.save();
 
