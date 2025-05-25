@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmYXR1ckBnbWFpbC5jb20iLCJpYXQiOjE3NDgxMDMyNTgsImV4cCI6MTc0ODEwMzMxOH0.lyHvIbhl9ediak8pIlfBVO7M7ShYKiTAIawvX386IKM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJmYXR1ckBnbWFpbC5jb20iLCJpYXQiOjE3NDgxMDQ5MzYsImV4cCI6MTc0ODEwNDk5Nn0.cWZkPgKe2nZVcvkTXI5uGdcJtrZJ80TG-djRw-vezUc
 ###
 GET https://be-713031961242.asia-southeast2.run.app/token
 ###
