@@ -140,39 +140,38 @@ async function createPlaylist(req, res) {
 //baru nambahin case password
 async function updatePlaylist(req, res) {
   try {
-    const { playlist_name,id_playlist } = req.body;
+    const { playlist_name, id_playlist } = req.body;
 
     if (!playlist_name) {
       return res.status(400).json({ msg: "Playlist name harus diisi" });
     }
 
-    const playlist = await Playlist.findAll({ where: { id_playlist } });
-    if (!playlist) {
+    // Temukan semua entitas dengan id_playlist yang sama
+    const playlists = await Playlist.findAll({ where: { id_playlist } });
+    if (!playlists || playlists.length === 0) {
       return res.status(404).json({ msg: "Playlist tidak ditemukan" });
     }
 
-    // Buat id_playlist yang baru
-    const new_id_playlist = `${playlist.id_user}_${playlist_name.replace(/\s+/g, '_')}`;
+    // Buat id_playlist baru
+    const new_id_playlist = `${playlists[0].id_user}_${playlist_name.replace(/\s+/g, '_')}`;
 
-    // Cek apakah id_playlist yang baru sudah ada
+    // Cek apakah id_playlist baru sudah ada (dan bukan milik entitas yang sama)
     const existingPlaylist = await Playlist.findOne({ where: { id_playlist: new_id_playlist } });
-    if (existingPlaylist && existingPlaylist.id !== playlist.id) {
+    if (existingPlaylist && existingPlaylist.id !== playlists[0].id) {
       return res.status(400).json({ msg: "Playlist dengan nama ini sudah ada" });
     }
 
-    // Update nama playlist
-    playlist.Playlistname = playlist_name;
+    // Update semua entitas
+    for (const playlist of playlists) {
+      playlist.Playlistname = playlist_name;
+      playlist.id_playlist = new_id_playlist;
+      await playlist.save();
+    }
 
-    // Update id_playlist dengan format baru
-    playlist.id_playlist = new_id_playlist;
-
-    await playlist.save();
-
-    res.status(200).json({ msg: "Playlist berhasil diupdate", playlist });
+    res.status(200).json({ msg: "Playlist berhasil diupdate", playlists });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ msg: "Terjadi kesalahan pada server", error });
-
   }
 }
 
