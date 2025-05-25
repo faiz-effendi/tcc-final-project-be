@@ -171,7 +171,8 @@ async function updatePlaylist(req, res) {
     res.status(200).json({ msg: "Playlist berhasil diupdate", playlist });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
+    res.status(500).json({ msg: "Terjadi kesalahan pada server", error });
+
   }
 }
 
