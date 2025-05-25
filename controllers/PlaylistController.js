@@ -30,9 +30,10 @@ async function getPlaylistByUserId(req, res) {
 
     // Kelompokkan playlist berdasarkan Playlistname
     const groupedPlaylists = playlists.reduce((acc, playlist) => {
-      const { Playlistname, id_playlist, id_user } = playlist;
+      const { id,Playlistname, id_playlist, id_user } = playlist;
       if (!acc[Playlistname]) {
         acc[Playlistname] = {
+          id,
           Playlistname,
           id_playlist,
           id_user,
