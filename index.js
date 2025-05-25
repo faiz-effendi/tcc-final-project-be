@@ -14,7 +14,7 @@ dotenv.config();
 
 setupAssociations(); // Set up associations between models
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+app.use(cors({ credentials: true, origin: 'https://e-07-450704.uc.r.appspot.com' }));
 app.use(express.json());
 app.get("/", (req, res) => res.render("index"));
 app.use(UserRoute);

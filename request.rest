@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJhYnJAZ21haWwuY29tIiwiaWF0IjoxNzQ4MTY3MDk4LCJleHAiOjE3NDgxNjc1Nzh9.ELfhN1MR4gxwSQoVDtn5N0UWEPjzrRoY6Yzw8g8Tzzw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJmYWl6MkBnbWFpbC5jb20iLCJpYXQiOjE3NDgxNjg0NTUsImV4cCI6MTc0ODE2ODkzNX0.jNE6MN52C-GQM4VYshCaDDdCXo--m8Ch3c8oMfo3zdQ
 GET https://be-713031961242.asia-southeast2.run.app/token
 ###
 GET http://localhost:5000/users-auth
@@ -15,8 +15,8 @@ Content-Type: application/json
 }
 
 ###
-# POST https://be-713031961242.asia-southeast2.run.app/login
-POST http://localhost:5000/login
+POST https://be-713031961242.asia-southeast2.run.app/login
+# POST http://localhost:5000/login
 Content-Type: application/json
 
 {
@@ -68,7 +68,7 @@ DELETE /delete-song/15
 
 
 ###
-GET http://localhost:5000/playlist
+GET https://be-713031961242.asia-southeast2.run.app/playlist/4
 Authorization: Bearer {{token}}
 
 ###
