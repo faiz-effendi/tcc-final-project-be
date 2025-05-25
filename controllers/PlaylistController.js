@@ -30,9 +30,10 @@ async function getPlaylistByUserId(req, res) {
 
     // Kelompokkan playlist berdasarkan Playlistname
     const groupedPlaylists = playlists.reduce((acc, playlist) => {
-      const { Playlistname, id_playlist, id_user } = playlist;
+      const { id,Playlistname, id_playlist, id_user } = playlist;
       if (!acc[Playlistname]) {
         acc[Playlistname] = {
+          id,
           Playlistname,
           id_playlist,
           id_user,
@@ -139,15 +140,13 @@ async function createPlaylist(req, res) {
 //baru nambahin case password
 async function updatePlaylist(req, res) {
   try {
-    const { playlist_name } = req.body;
-    const { id_playlist } = req.params;
+    const { playlist_name,id_playlist } = req.body;
 
     if (!playlist_name) {
       return res.status(400).json({ msg: "Playlist name harus diisi" });
     }
 
-    // Cari playlist berdasarkan id_playlist
-    const playlist = await Playlist.findOne({ where: { id_playlist } });
+    const playlist = await Playlist.findAll({ where: { id_playlist } });
     if (!playlist) {
       return res.status(404).json({ msg: "Playlist tidak ditemukan" });
     }
