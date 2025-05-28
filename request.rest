@@ -1,4 +1,5 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJmYWl6MkBnbWFpbC5jb20iLCJpYXQiOjE3NDg0MDQ3NTAsImV4cCI6MTc0ODQwNTIzMH0.wD1IACKV0c9f0dAcWpzVaaOM2BOFbx8z2vdHdM7L0Xk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJmYWl6MkBnbWFpbC5jb20iLCJpYXQiOjE3NDg0MDc5MTcsImV4cCI6MTc0ODQwODM5N30.b1K_CqOLJjY4C3d1HKUh1zE8ILAsu2RdyiwQiZxXXjU
+
 GET https://be-713031961242.asia-southeast2.run.app/token
 ###
 GET http://localhost:5000/users-auth
@@ -7,10 +8,12 @@ Authorization: Bearer {{token}}
 GET https://be-713031961242.asia-southeast2.run.app/users
 
 ###
-POST http://localhost:5000/register
+POST https://be-713031961242.asia-southeast2.run.app/register
+Authorization: Bearer {{token}}
+
 Content-Type: application/json
 {
-    "email": "flcia@tes.com",
+    "email": "cobaregist@gmail.com",
     "password": "12345"
 }
 
@@ -20,7 +23,7 @@ POST https://be-713031961242.asia-southeast2.run.app/login
 Content-Type: application/json
 
 {
-    "email": "faiz2@gmail.com",
+    "email": "@gmail.com",
     "password": "testing"
 }
 

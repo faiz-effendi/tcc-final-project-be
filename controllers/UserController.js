@@ -25,12 +25,16 @@ async function getUserById(req, res) {
 // REGISTER //baru nambahin pasword dan bcrypt
 async function createUser(req, res) {
   try {
-    const { email, password } = req.body;
+    const email = req.body.email;
+    const password = req.body.password;
+
     const existingUser = await User.findOne({ email: email });
+    console.log("existinguser :",existingUser);
+
     if (existingUser) {
+      console.log("Email already registered:", email);
       return res.status(400).json({ msg: "Email already registered. Please use a different email." });
     }
-    const saltRounds = 10; // Increased salt rounds for better security
     const encryptPassword = await bcrypt.hash(password, saltRounds);
 
     await User.create({
