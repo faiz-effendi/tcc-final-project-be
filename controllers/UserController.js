@@ -29,11 +29,9 @@ async function createUser(req, res) {
     const password = req.body.password;
 
     const existingUser = await User.findOne({ email: email });
-    console.log("existinguser :",existingUser);
 
     if (existingUser) {
-      console.log("Email already registered:", email);
-      return res.status(400).json({ msg: "Email already registered. Please use a different email." });
+      return res.status(400).json({ msg: "Email already registered. Please use a different email.", email, existingUser });
     }
     const encryptPassword = await bcrypt.hash(password, saltRounds);
 

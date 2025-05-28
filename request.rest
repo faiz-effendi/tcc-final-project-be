@@ -9,9 +9,8 @@ GET https://be-713031961242.asia-southeast2.run.app/users
 
 ###
 POST https://be-713031961242.asia-southeast2.run.app/register
-Authorization: Bearer {{token}}
-
 Content-Type: application/json
+
 {
     "email": "cobaregist@gmail.com",
     "password": "12345"
