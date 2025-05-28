@@ -28,7 +28,7 @@ async function createUser(req, res) {
     const email = req.body.email;
     const password = req.body.password;
 
-    const existingUser = await User.findOne({ email: email });
+    const existingUser = await User.findOne({ where: {email: email} });
 
     if (existingUser) {
       return res.status(400).json({ msg: "Email already registered. Please use a different email.", email, existingUser });

@@ -12,7 +12,7 @@ POST https://be-713031961242.asia-southeast2.run.app/register
 Content-Type: application/json
 
 {
-    "email": "cobaregist@gmail.com",
+    "email": "halhlao@gmail.com",
     "password": "12345"
 }
 
